@@ -1,0 +1,1096 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="Web Guinness - AI Powered Web Search">
+
+    <title>Web Guinness - AI Powered Search</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* ==========================================
+           HISTORY NAVIGATION
+           ========================================== */
+
+        .history-nav-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 4px;
+        }
+
+        .history-nav-link:hover {
+            color: #1d4ed8;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 800px) {
+
+            .history-nav-link {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==========================================
+     NAVBAR
+     ========================================== -->
+
+<header class="top-navbar">
+
+    <div class="navbar-inner">
+
+
+        <!-- LOGO -->
+
+        <a href="/" class="site-logo">
+
+            <div class="logo-symbol">
+                W
+            </div>
+
+            <div class="logo-name">
+                Web Guinness
+            </div>
+
+        </a>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="main-navigation">
+
+            <a href="/"
+               class="nav-item active">
+
+                Home
+
+            </a>
+
+            <a href="#search"
+               class="nav-item">
+
+                Search
+
+            </a>
+
+            <a href="#features"
+               class="nav-item">
+
+                Features
+
+            </a>
+
+            <a href="#about"
+               class="nav-item">
+
+                About
+
+            </a>
+
+            <a href="#contact"
+               class="nav-item">
+
+                Contact
+
+            </a>
+
+        </nav>
+
+
+        <!-- RIGHT SIDE -->
+
+        <div class="navbar-right">
+
+
+            {% if session.get("user_id") %}
+
+
+                <!-- HISTORY -->
+
+                <a href="{{ url_for('history') }}"
+                   class="history-nav-link">
+
+                    History
+
+                </a>
+
+
+                <!-- USER NAME -->
+
+                <span class="user-name">
+
+                    Hi, {{ session.get("user_name") }}
+
+                </span>
+
+
+                <!-- LOGOUT -->
+
+                <a href="{{ url_for('logout') }}"
+                   class="logout-link">
+
+                    Logout
+
+                </a>
+
+
+            {% else %}
+
+
+                <!-- SIGN IN -->
+
+                <a href="{{ url_for('login') }}"
+                   class="login-link">
+
+                    Sign in
+
+                </a>
+
+
+                <!-- REGISTER -->
+
+                <a href="{{ url_for('register') }}"
+                   class="register-link">
+
+                    Register
+
+                </a>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- MOBILE MENU -->
+
+        <button class="mobile-menu"
+                type="button">
+
+            ☰
+
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<!-- ==========================================
+     MAIN
+     ========================================== -->
+
+<main>
+
+
+    <!-- ==========================================
+         HERO
+         ========================================== -->
+
+    <section class="hero-section"
+             id="search">
+
+        <div class="hero-container">
+
+            <div class="hero-content">
+
+
+                <div class="hero-label">
+
+                    AI POWERED WEB SEARCH
+
+                </div>
+
+
+                <h1>
+
+                    Search smarter.
+
+                    <br>
+
+                    <span>
+                        Find better answers.
+                    </span>
+
+                </h1>
+
+
+                <p class="hero-description">
+
+                    Search the web, understand information,
+                    and get AI-powered answers from real
+                    online sources.
+
+                </p>
+
+
+                <!-- SEARCH FORM -->
+
+                <form method="POST"
+                      action="/"
+                      class="main-search">
+
+
+                    <div class="search-field">
+
+                        <span class="search-icon">
+
+                            🔍
+
+                        </span>
+
+
+                        <input
+                            type="text"
+                            name="question"
+                            value="{{ question }}"
+                            placeholder="What do you want to know?"
+                            autocomplete="off"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button type="submit"
+                            class="search-submit">
+
+                        Search
+
+                    </button>
+
+
+                </form>
+
+
+                <div class="search-example">
+
+                    Popular searches:
+
+                    <span>
+                        Artificial Intelligence
+                    </span>
+
+                    <span>
+                        Technology
+                    </span>
+
+                    <span>
+                        Python
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         RESULTS
+         ========================================== -->
+
+    {% if question %}
+
+    <section class="results-section">
+
+        <div class="content-container">
+
+
+            <div class="results-title">
+
+                <div>
+
+                    <span>
+                        SEARCH RESULTS
+                    </span>
+
+                    <h2>
+
+                        Results for "{{ question }}"
+
+                    </h2>
+
+                </div>
+
+
+                {% if results %}
+
+                <div class="results-count">
+
+                    {{ results|length }}
+
+                    Sources
+
+                </div>
+
+                {% endif %}
+
+
+            </div>
+
+
+
+            <!-- AI ANSWER -->
+
+            {% if answer %}
+
+            <div class="ai-answer-card">
+
+
+                <div class="answer-heading">
+
+
+                    <div class="answer-icon">
+
+                        ✨
+
+                    </div>
+
+
+                    <div>
+
+                        <small>
+
+                            AI GENERATED ANSWER
+
+                        </small>
+
+                        <h3>
+
+                            Web Guinness Answer
+
+                        </h3>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="answer-body">
+
+                    {{ answer }}
+
+                </div>
+
+
+            </div>
+
+            {% endif %}
+
+
+
+            <!-- WEB SOURCES -->
+
+            {% if results %}
+
+            <div class="source-section"
+                 id="sources">
+
+
+                <div class="source-title">
+
+
+                    <div>
+
+                        <small>
+
+                            WEB RESEARCH
+
+                        </small>
+
+                        <h2>
+
+                            Sources
+
+                        </h2>
+
+                    </div>
+
+
+                    <span>
+
+                        🌐 Live Web Results
+
+                    </span>
+
+
+                </div>
+
+
+
+                <div class="source-list">
+
+
+                    {% for result in results %}
+
+
+                    <a href="{{ result.url }}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="source-item">
+
+
+                        <div class="source-index">
+
+                            {{ loop.index }}
+
+                        </div>
+
+
+                        <div class="source-details">
+
+
+                            <div class="source-label">
+
+                                WEB SOURCE
+
+                            </div>
+
+
+                            <h3>
+
+                                {{ result.title }}
+
+                            </h3>
+
+
+                            <div class="source-url">
+
+                                {{ result.url }}
+
+                            </div>
+
+
+                            <p>
+
+                                {{ result.content[:300] }}...
+
+                            </p>
+
+
+                            <div class="source-link">
+
+                                Open source →
+
+                            </div>
+
+
+                        </div>
+
+
+                    </a>
+
+
+                    {% endfor %}
+
+
+                </div>
+
+
+            </div>
+
+            {% endif %}
+
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+
+
+    <!-- ==========================================
+         FEATURES
+         ========================================== -->
+
+    <section class="features-section"
+             id="features">
+
+        <div class="content-container">
+
+
+            <div class="section-heading">
+
+
+                <span>
+
+                    WEB GUINNESS
+
+                </span>
+
+
+                <h2>
+
+                    Everything you need to search smarter
+
+                </h2>
+
+
+                <p>
+
+                    A simple combination of web search
+                    and artificial intelligence.
+
+                </p>
+
+
+            </div>
+
+
+
+            <div class="feature-grid">
+
+
+                <!-- FEATURE 1 -->
+
+                <div class="feature-box">
+
+
+                    <div class="feature-icon">
+
+                        🔎
+
+                    </div>
+
+
+                    <h3>
+
+                        Web Search
+
+                    </h3>
+
+
+                    <p>
+
+                        Search across the web and discover
+                        relevant information from multiple
+                        sources.
+
+                    </p>
+
+
+                </div>
+
+
+
+                <!-- FEATURE 2 -->
+
+                <div class="feature-box">
+
+
+                    <div class="feature-icon">
+
+                        🤖
+
+                    </div>
+
+
+                    <h3>
+
+                        AI Answers
+
+                    </h3>
+
+
+                    <p>
+
+                        Get simple and useful answers generated
+                        using powerful artificial intelligence.
+
+                    </p>
+
+
+                </div>
+
+
+
+                <!-- FEATURE 3 -->
+
+                <div class="feature-box">
+
+
+                    <div class="feature-icon">
+
+                        🌐
+
+                    </div>
+
+
+                    <h3>
+
+                        Real Sources
+
+                    </h3>
+
+
+                    <p>
+
+                        Check the original websites behind
+                        the information.
+
+                    </p>
+
+
+                </div>
+
+
+
+                <!-- FEATURE 4 -->
+
+                <div class="feature-box">
+
+
+                    <div class="feature-icon">
+
+                        ⚡
+
+                    </div>
+
+
+                    <h3>
+
+                        Fast Results
+
+                    </h3>
+
+
+                    <p>
+
+                        Search the web and get an AI answer
+                        from one simple interface.
+
+                    </p>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         ABOUT
+         ========================================== -->
+
+    <section class="about-section"
+             id="about">
+
+        <div class="content-container about-container">
+
+
+            <div class="about-text">
+
+
+                <span>
+
+                    ABOUT WEB GUINNESS
+
+                </span>
+
+
+                <h2>
+
+                    A better way to
+                    explore information.
+
+                </h2>
+
+
+                <p>
+
+                    Web Guinness is an AI-powered web search
+                    platform designed to make online research
+                    easier and faster.
+
+                </p>
+
+
+                <p>
+
+                    Instead of opening many different websites,
+                    search for your question and explore an
+                    AI-generated answer together with the
+                    original sources.
+
+                </p>
+
+
+                <div class="about-list">
+
+
+                    <div>
+
+                        ✓ Real web search
+
+                    </div>
+
+
+                    <div>
+
+                        ✓ AI-generated answers
+
+                    </div>
+
+
+                    <div>
+
+                        ✓ Original web sources
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ABOUT CARD -->
+
+            <div class="about-card">
+
+
+                <div class="browser-bar">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
+
+                <div class="fake-search">
+
+                    🔍
+
+                    What is artificial intelligence?
+
+                </div>
+
+
+                <div class="fake-answer">
+
+
+                    <div class="fake-title">
+
+                        ✨ AI Answer
+
+                    </div>
+
+
+                    <div></div>
+                    <div></div>
+                    <div></div>
+
+
+                    <div class="small-line"></div>
+
+
+                </div>
+
+
+                <div class="fake-source">
+
+                    🌐 Verified Web Sources
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         CTA
+         ========================================== -->
+
+    <section class="cta-section"
+             id="contact">
+
+        <div class="content-container cta-container">
+
+
+            <div>
+
+
+                <span>
+
+                    GET STARTED
+
+                </span>
+
+
+                <h2>
+
+                    Start searching smarter today.
+
+                </h2>
+
+
+                <p>
+
+                    Ask a question and explore the web
+                    with Web Guinness.
+
+                </p>
+
+
+            </div>
+
+
+            <a href="#search"
+               class="cta-button">
+
+                Start Searching
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+<!-- ==========================================
+     FOOTER
+     ========================================== -->
+
+<footer class="site-footer">
+
+
+    <div class="footer-main">
+
+
+        <!-- FOOTER BRAND -->
+
+        <div class="footer-brand">
+
+
+            <a href="/"
+               class="footer-logo">
+
+
+                <div>
+
+                    W
+
+                </div>
+
+
+                Web Guinness
+
+
+            </a>
+
+
+            <p>
+
+                AI powered web search for
+                smarter online research.
+
+            </p>
+
+
+        </div>
+
+
+
+        <!-- PRODUCT -->
+
+        <div class="footer-column">
+
+
+            <h3>
+
+                Product
+
+            </h3>
+
+
+            <a href="#search">
+
+                Search
+
+            </a>
+
+
+            <a href="#features">
+
+                Features
+
+            </a>
+
+
+            <a href="#sources">
+
+                Sources
+
+            </a>
+
+
+        </div>
+
+
+
+        <!-- COMPANY -->
+
+        <div class="footer-column">
+
+
+            <h3>
+
+                Company
+
+            </h3>
+
+
+            <a href="#about">
+
+                About
+
+            </a>
+
+
+            <a href="#contact">
+
+                Contact
+
+            </a>
+
+
+        </div>
+
+
+
+        <!-- ACCOUNT -->
+
+        <div class="footer-column">
+
+
+            <h3>
+
+                Account
+
+            </h3>
+
+
+            {% if session.get("user_id") %}
+
+
+                <a href="{{ url_for('history') }}">
+
+                    Search History
+
+                </a>
+
+
+                <a href="{{ url_for('logout') }}">
+
+                    Logout
+
+                </a>
+
+
+            {% else %}
+
+
+                <a href="{{ url_for('login') }}">
+
+                    Sign in
+
+                </a>
+
+
+                <a href="{{ url_for('register') }}">
+
+                    Register
+
+                </a>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- FOOTER BOTTOM -->
+
+    <div class="footer-bottom">
+
+
+        <p>
+
+            © 2026 Web Guinness.
+            All rights reserved.
+
+        </p>
+
+
+        <p>
+
+            Powered by Tavily + Groq
+
+        </p>
+
+
+    </div>
+
+
+</footer>
+
+
+</body>
+
+</html>
+
